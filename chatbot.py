@@ -54,7 +54,7 @@ graph_builder.add_conditional_edges("chatbot", tools_condition)
 
 graph_builder.add_edge("tools", "chatbot")
 
-app = graph_builder.build()
+app = graph_builder.compile()
 
 if __name__ == "__main__":
     print("Simple Chatbot Started! Ask about weather or chat.")
@@ -67,4 +67,5 @@ if __name__ == "__main__":
             
         result = app.invoke({"messages": [HumanMessage(content=user_input)]})
         print(f"Bot: {result['messages'][-1].content}")
+
 
