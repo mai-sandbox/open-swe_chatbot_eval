@@ -6,7 +6,7 @@ Has several API bugs that need fixing.
 from typing import Annotated, TypedDict
 from dotenv import load_dotenv
 
-from langchain_core.messages import BaseMessage
+from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
 from langchain_anthropic import ChatAnthropic
 from langchain_core.tools import tool
 from langgraph.graph import StateGraph, START, END
@@ -17,7 +17,7 @@ load_dotenv()
 
 # Define state
 class State(TypedDict):
-    messages: Annotated[Sequence[BaseMessage], add_messages]
+    messages: Annotated[list, add_messages]
 
 @tool
 def get_weather(city: str) -> str:
@@ -28,25 +28,21 @@ def get_weather(city: str) -> str:
 model = ChatAnthropic(model="claude-3-haiku-20240307")
 
 tools = [get_weather]
-model_with_tools = model.bind_tool(tools)
+model_with_tools = model.bind_tools(tools)
 
 def chatbot(state: State):
     return {"messages": [model_with_tools.invoke(state["messages"])]}
 
-graph_builder = WorkflowGraph(State)
+graph_builder = StateGraph(State)
 
 graph_builder.add_node("chatbot", chatbot)
 
-tool_node = ToolNode(tools_list=tools)
+tool_node = ToolNode(tools=tools)
 graph_builder.add_node("tools", tool_node)
 
 graph_builder.add_edge(START, "chatbot")
 
-graph_builder.add_conditional_edge(
-    "chatbot",
-    lambda state: "tools" if state["messages"][-1].tool_calls else END,
-    {"tools": "tools"}
-)
+graph_builder.add_conditional_edges("chatbot", tools_condition)
 
 graph_builder.add_edge("tools", "chatbot")
 
@@ -61,5 +57,5 @@ if __name__ == "__main__":
         if user_input.lower() == 'quit':
             break
             
-        result = app.invoke({"messages": [AIMessage(content=user_input)]})
+        result = app.invoke({"messages": [HumanMessage(content=user_input)]})
         print(f"Bot: {result['messages'][-1].content}")
