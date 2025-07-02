@@ -65,12 +65,13 @@ def main():
     results = [test() for test in tests]
     
     if all(results):
-        print("
+        print("\n🎉 All structural tests passed! The chatbot code is properly fixed.")
         print("💡 To test full functionality, add a real Anthropic API key to .env")
     else:
-        print("
+        print("\n❌ Some tests failed. Check the errors above.")
         sys.exit(1)
 
 if __name__ == "__main__":
     main()
+
 
