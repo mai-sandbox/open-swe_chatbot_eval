@@ -2,6 +2,7 @@
 Simple LangGraph chatbot with a weather tool.
 Has several API bugs that need fixing.
 """
+import os
 
 from typing import Annotated, TypedDict
 from dotenv import load_dotenv
@@ -25,7 +26,14 @@ def get_weather(city: str) -> str:
     return f"It's sunny and 75°F in {city}!"
 
 # Setup model
-model = ChatAnthropic(model="claude-3-haiku-20240307")
+api_key = os.getenv("ANTHROPIC_API_KEY")
+if not api_key or api_key == "your_api_key_here":
+    print("Error: ANTHROPIC_API_KEY is not set or is using the placeholder value.")
+    print("Please set your Anthropic API key in the .env file.")
+    print("You can get an API key from: https://console.anthropic.com/")
+    exit(1)
+
+model = ChatAnthropic(model="claude-3-haiku-20240307", api_key=api_key)
 
 tools = [get_weather]
 model_with_tools = model.bind_tools(tools)
@@ -59,3 +67,4 @@ if __name__ == "__main__":
             
         result = app.invoke({"messages": [HumanMessage(content=user_input)]})
         print(f"Bot: {result['messages'][-1].content}")
+
