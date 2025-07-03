@@ -17,7 +17,7 @@ load_dotenv()
 
 # Define state
 class State(TypedDict):
-    messages: Annotated[Sequence[BaseMessage], add_messages]
+    messages: Annotated[list, add_messages]
 
 @tool
 def get_weather(city: str) -> str:
@@ -63,3 +63,4 @@ if __name__ == "__main__":
             
         result = app.invoke({"messages": [AIMessage(content=user_input)]})
         print(f"Bot: {result['messages'][-1].content}")
+
