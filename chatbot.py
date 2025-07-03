@@ -37,7 +37,7 @@ graph_builder = StateGraph(State)
 
 graph_builder.add_node("chatbot", chatbot)
 
-tool_node = ToolNode(tools_list=tools)
+tool_node = ToolNode(tools=tools)
 graph_builder.add_node("tools", tool_node)
 
 graph_builder.add_edge(START, "chatbot")
@@ -63,6 +63,7 @@ if __name__ == "__main__":
             
         result = app.invoke({"messages": [AIMessage(content=user_input)]})
         print(f"Bot: {result['messages'][-1].content}")
+
 
 
 
