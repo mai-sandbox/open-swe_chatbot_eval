@@ -33,7 +33,7 @@ model_with_tools = model.bind_tool(tools)
 def chatbot(state: State):
     return {"messages": [model_with_tools.invoke(state["messages"])]}
 
-graph_builder = WorkflowGraph(State)
+graph_builder = StateGraph(State)
 
 graph_builder.add_node("chatbot", chatbot)
 
@@ -63,4 +63,5 @@ if __name__ == "__main__":
             
         result = app.invoke({"messages": [AIMessage(content=user_input)]})
         print(f"Bot: {result['messages'][-1].content}")
+
 
