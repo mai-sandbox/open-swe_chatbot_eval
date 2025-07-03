@@ -28,7 +28,7 @@ def get_weather(city: str) -> str:
 model = ChatAnthropic(model="claude-3-haiku-20240307")
 
 tools = [get_weather]
-model_with_tools = model.bind_tool(tools)
+model_with_tools = model.bind_tools(tools)
 
 def chatbot(state: State):
     return {"messages": [model_with_tools.invoke(state["messages"])]}
@@ -63,5 +63,6 @@ if __name__ == "__main__":
             
         result = app.invoke({"messages": [AIMessage(content=user_input)]})
         print(f"Bot: {result['messages'][-1].content}")
+
 
 
