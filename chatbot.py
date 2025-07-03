@@ -42,10 +42,9 @@ graph_builder.add_node("tools", tool_node)
 
 graph_builder.add_edge(START, "chatbot")
 
-graph_builder.add_conditional_edge(
+graph_builder.add_conditional_edges(
     "chatbot",
-    lambda state: "tools" if state["messages"][-1].tool_calls else END,
-    {"tools": "tools"}
+    tools_condition,
 )
 
 graph_builder.add_edge("tools", "chatbot")
@@ -63,6 +62,7 @@ if __name__ == "__main__":
             
         result = app.invoke({"messages": [HumanMessage(content=user_input)]})
         print(f"Bot: {result['messages'][-1].content}")
+
 
 
 
