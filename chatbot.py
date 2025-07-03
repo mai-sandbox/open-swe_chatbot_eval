@@ -61,8 +61,9 @@ if __name__ == "__main__":
         if user_input.lower() == 'quit':
             break
             
-        result = app.invoke({"messages": [AIMessage(content=user_input)]})
+        result = app.invoke({"messages": [HumanMessage(content=user_input)]})
         print(f"Bot: {result['messages'][-1].content}")
+
 
 
 
