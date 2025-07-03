@@ -3,10 +3,10 @@ Simple LangGraph chatbot with a weather tool.
 Has several API bugs that need fixing.
 """
 
-from typing import Annotated, TypedDict
+from typing import Annotated, TypedDict, Sequence
 from dotenv import load_dotenv
 
-from langchain_core.messages import BaseMessage
+from langchain_core.messages import BaseMessage, AIMessage, HumanMessage
 from langchain_anthropic import ChatAnthropic
 from langchain_core.tools import tool
 from langgraph.graph import StateGraph, START, END
