@@ -63,9 +63,3 @@ if __name__ == "__main__":
         result = app.invoke({"messages": [HumanMessage(content=user_input)]})
         print(f"Bot: {result['messages'][-1].content}")
 
-
-
-
-
-
-
