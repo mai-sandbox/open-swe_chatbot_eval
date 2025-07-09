@@ -4,6 +4,7 @@ Has several API bugs that need fixing.
 """
 
 from typing import Annotated, TypedDict
+import os
 from dotenv import load_dotenv
 
 from langchain_core.messages import BaseMessage, AIMessage, HumanMessage
@@ -14,6 +15,12 @@ from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode, tools_condition
 
 load_dotenv()
+
+# Check for required API key
+if not os.getenv("ANTHROPIC_API_KEY"):
+    print("Error: ANTHROPIC_API_KEY environment variable is not set.")
+    print("Please copy .env.example to .env and add your Anthropic API key.")
+    exit(1)
 
 # Define state
 class State(TypedDict):
@@ -62,5 +69,6 @@ if __name__ == "__main__":
             
         result = app.invoke({"messages": [HumanMessage(content=user_input)]})
         print(f"Bot: {result['messages'][-1].content}")
+
 
 
