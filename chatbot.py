@@ -62,13 +62,19 @@ if __name__ == "__main__":
     print("Simple Chatbot Started! Ask about weather or chat.")
     print("Type 'quit' to exit")
     
-    while True:
-        user_input = input("\nYou: ")
-        if user_input.lower() == 'quit':
-            break
-            
-        result = app.invoke({"messages": [HumanMessage(content=user_input)]})
-        print(f"Bot: {result['messages'][-1].content}")
+    try:
+        while True:
+            user_input = input("\nYou: ")
+            if user_input.lower() == 'quit':
+                break
+                
+            result = app.invoke({"messages": [HumanMessage(content=user_input)]})
+            print(f"Bot: {result['messages'][-1].content}")
+    except KeyboardInterrupt:
+        print("\n\nGoodbye!")
+    except EOFError:
+        print("\n\nGoodbye!")
+
 
 
 
