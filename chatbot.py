@@ -75,9 +75,17 @@ if __name__ == "__main__":
         user_input = input("\nYou: ")
         if user_input.lower() == 'quit':
             break
-            
-        result = app.invoke({"messages": [HumanMessage(content=user_input)]})
-        print(f"Bot: {result['messages'][-1].content}")
+        
+        try:
+            result = app.invoke({"messages": [HumanMessage(content=user_input)]})
+            print(f"Bot: {result['messages'][-1].content}")
+        except KeyboardInterrupt:
+            print("\nGoodbye!")
+            break
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            print("Please try again or type 'quit' to exit.")
+
 
 
 
