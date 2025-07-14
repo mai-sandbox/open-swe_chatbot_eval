@@ -3,6 +3,8 @@ Simple LangGraph chatbot with a weather tool.
 Has several API bugs that need fixing.
 """
 
+import os
+import sys
 from typing import Annotated, TypedDict, Sequence
 from dotenv import load_dotenv
 
@@ -62,6 +64,7 @@ if __name__ == "__main__":
             
         result = app.invoke({"messages": [HumanMessage(content=user_input)]})
         print(f"Bot: {result['messages'][-1].content}")
+
 
 
 
