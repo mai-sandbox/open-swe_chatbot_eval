@@ -6,8 +6,8 @@ Has several API bugs that need fixing.
 from typing import Annotated, TypedDict, Sequence
 from dotenv import load_dotenv
 
+from langchain.chat_models import init_chat_model
 from langchain_core.messages import BaseMessage, AIMessage, HumanMessage
-from langchain_anthropic import ChatAnthropic
 from langchain_core.tools import tool
 from langgraph.graph import StateGraph, START, END
 from langgraph.graph.message import add_messages
@@ -25,10 +25,10 @@ def get_weather(city: str) -> str:
     return f"It's sunny and 75°F in {city}!"
 
 # Setup model
-model = ChatAnthropic(model="claude-3-haiku-20240307")
+llm = init_chat_model("anthropic:claude-3-5-sonnet-latest")
 
 tools = [get_weather]
-model_with_tools = model.bind_tools(tools)
+model_with_tools = llm.bind_tools(tools)
 
 def chatbot(state: State):
     return {"messages": [model_with_tools.invoke(state["messages"])]}
@@ -62,6 +62,7 @@ if __name__ == "__main__":
             
         result = app.invoke({"messages": [HumanMessage(content=user_input)]})
         print(f"Bot: {result['messages'][-1].content}")
+
 
 
 
