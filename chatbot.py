@@ -40,7 +40,14 @@ tools = [get_weather]
 model_with_tools = llm.bind_tools(tools)
 
 def chatbot(state: State):
-    return {"messages": [model_with_tools.invoke(state["messages"])]}
+    try:
+        response = model_with_tools.invoke(state["messages"])
+        return {"messages": [response]}
+    except Exception as e:
+        # Create an error message that the user will see
+        error_msg = f"Sorry, I encountered an error: {str(e)}"
+        from langchain_core.messages import AIMessage
+        return {"messages": [AIMessage(content=error_msg)]}
 
 graph_builder = StateGraph(State)
 
@@ -71,6 +78,7 @@ if __name__ == "__main__":
             
         result = app.invoke({"messages": [HumanMessage(content=user_input)]})
         print(f"Bot: {result['messages'][-1].content}")
+
 
 
 
