@@ -77,14 +77,26 @@ if __name__ == "__main__":
             break
         
         try:
-            result = app.invoke({"messages": [HumanMessage(content=user_input)]})
-            print(f"Bot: {result['messages'][-1].content}")
+            print("Bot: ", end="", flush=True)
+            
+            # Use streaming for better user experience
+            response_content = ""
+            for chunk in app.stream({"messages": [HumanMessage(content=user_input)]}):
+                if "chatbot" in chunk:
+                    if chunk["chatbot"]["messages"]:
+                        content = chunk["chatbot"]["messages"][-1].content
+                        if content != response_content:
+                            print(content[len(response_content):], end="", flush=True)
+                            response_content = content
+            
+            print()  # New line after streaming response
         except KeyboardInterrupt:
             print("\nGoodbye!")
             break
         except Exception as e:
             print(f"Error: {str(e)}")
             print("Please try again or type 'quit' to exit.")
+
 
 
 
