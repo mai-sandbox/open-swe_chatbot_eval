@@ -17,6 +17,13 @@ from langgraph.prebuilt import ToolNode, tools_condition
 
 load_dotenv()
 
+# Validate required environment variables
+if not os.getenv("ANTHROPIC_API_KEY"):
+    print("Error: ANTHROPIC_API_KEY environment variable is required.")
+    print("Please set your Anthropic API key in a .env file or as an environment variable.")
+    print("Example: ANTHROPIC_API_KEY=your_api_key_here")
+    sys.exit(1)
+
 # Define state
 class State(TypedDict):
     messages: Annotated[list, add_messages]
@@ -64,6 +71,7 @@ if __name__ == "__main__":
             
         result = app.invoke({"messages": [HumanMessage(content=user_input)]})
         print(f"Bot: {result['messages'][-1].content}")
+
 
 
 
