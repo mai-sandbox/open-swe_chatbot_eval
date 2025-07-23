@@ -1,5 +1,5 @@
 """
-Simple LangGraph chatbot with a weather tool.
+Simple LangGraph chatbot with weather and web search tools.
 Has several API bugs that need fixing.
 """
 
@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 from langchain_core.messages import BaseMessage, AIMessage, HumanMessage
 from langchain_anthropic import ChatAnthropic
 from langchain_core.tools import tool
+from langchain_tavily import TavilySearch
 from langgraph.graph import StateGraph, START, END
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode, tools_condition
@@ -24,10 +25,13 @@ def get_weather(city: str) -> str:
     """Get weather for a city."""
     return f"It's sunny and 75°F in {city}!"
 
+# Create web search tool
+web_search = TavilySearch(max_results=2)
+
 # Setup model
 model = ChatAnthropic(model="claude-3-haiku-20240307")
 
-tools = [get_weather]
+tools = [get_weather, web_search]
 model_with_tools = model.bind_tools(tools)
 
 def chatbot(state: State):
@@ -62,6 +66,7 @@ if __name__ == "__main__":
             
         result = app.invoke({"messages": [HumanMessage(content=user_input)]})
         print(f"Bot: {result['messages'][-1].content}")
+
 
 
 
