@@ -18,6 +18,17 @@ load_dotenv()
 # Define state
 class State(TypedDict):
     messages: Annotated[list, add_messages]
+    session_id: str
+    previous_node: str
+    next: str
+    plan: str
+    task: str
+    code: str
+    function_detail: str
+    nearest_task: str
+    nearest_plan: str
+    nearest_code: str
+    known_plan: bool
 
 @tool
 def get_weather(city: str) -> str:
@@ -62,6 +73,7 @@ if __name__ == "__main__":
             
         result = app.invoke({"messages": [HumanMessage(content=user_input)]})
         print(f"Bot: {result['messages'][-1].content}")
+
 
 
 
