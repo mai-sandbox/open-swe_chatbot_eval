@@ -1,3 +1,6 @@
+> [!TIP]
+> Welcome to Open SWE!
+
 A basic chatbot built with LangGraph that can have conversations and call a simple weather tool.
 
 ## Setup
