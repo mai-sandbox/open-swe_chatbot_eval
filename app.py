@@ -32,6 +32,13 @@ def chat():
     and returns the chatbot response as JSON.
     """
     try:
+        # Check if API key is configured
+        if not check_api_key():
+            return jsonify({
+                'error': 'ANTHROPIC_API_KEY is not configured. Please copy .env.example to .env and add your API key.',
+                'status': 'error'
+            }), 503  # Service Unavailable
+        
         # Get JSON data from request
         data = request.get_json()
         
@@ -57,6 +64,24 @@ def chat():
             'response': bot_response,
             'status': 'success'
         })
+        
+    except AuthenticationError as e:
+        return jsonify({
+            'error': 'Invalid or missing Anthropic API key. Please check your ANTHROPIC_API_KEY configuration.',
+            'status': 'error'
+        }), 401  # Unauthorized
+        
+    except RateLimitError as e:
+        return jsonify({
+            'error': 'Rate limit exceeded. Please try again later.',
+            'status': 'error'
+        }), 429  # Too Many Requests
+        
+    except APIError as e:
+        return jsonify({
+            'error': f'Anthropic API error: {str(e)}',
+            'status': 'error'
+        }), 502  # Bad Gateway
         
     except Exception as e:
         return jsonify({
@@ -84,4 +109,5 @@ if __name__ == '__main__':
     print("  GET /health - Health check")
     
     app.run(host='0.0.0.0', port=5000, debug=True)
+
 
