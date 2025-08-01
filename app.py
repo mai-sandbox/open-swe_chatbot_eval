@@ -91,10 +91,14 @@ def chat():
 
 @app.route('/health', methods=['GET'])
 def health():
-    """Health check endpoint."""
+    """Health check endpoint with API key status."""
+    api_key_configured = check_api_key()
+    
     return jsonify({
-        'status': 'healthy',
-        'service': 'chatbot-api'
+        'status': 'healthy' if api_key_configured else 'degraded',
+        'service': 'chatbot-api',
+        'api_key_configured': api_key_configured,
+        'message': 'Service is ready' if api_key_configured else 'ANTHROPIC_API_KEY not configured'
     })
 
 if __name__ == '__main__':
@@ -109,5 +113,6 @@ if __name__ == '__main__':
     print("  GET /health - Health check")
     
     app.run(host='0.0.0.0', port=5000, debug=True)
+
 
 
