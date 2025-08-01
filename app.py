@@ -7,6 +7,7 @@ from flask import Flask, request, jsonify
 from langchain_core.messages import HumanMessage
 import os
 from dotenv import load_dotenv
+from anthropic import AuthenticationError, RateLimitError, APIError
 
 # Load environment variables
 load_dotenv()
@@ -16,6 +17,13 @@ from chatbot import app as chatbot_app
 
 # Create Flask app
 app = Flask(__name__)
+
+def check_api_key():
+    """Check if ANTHROPIC_API_KEY is configured."""
+    api_key = os.getenv('ANTHROPIC_API_KEY')
+    if not api_key or api_key == 'your_api_key_here':
+        return False
+    return True
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -76,3 +84,4 @@ if __name__ == '__main__':
     print("  GET /health - Health check")
     
     app.run(host='0.0.0.0', port=5000, debug=True)
+
