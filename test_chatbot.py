@@ -5,10 +5,8 @@ Tests both /health and /chat endpoints to verify functionality.
 """
 
 import requests
-import json
 import time
 import sys
-from typing import Dict, Any
 
 # Server configuration
 BASE_URL = "http://localhost:5000"
@@ -244,3 +242,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
