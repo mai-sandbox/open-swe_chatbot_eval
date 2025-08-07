@@ -33,8 +33,10 @@ model = ChatAnthropic(model="claude-3-haiku-20240307")
 tools = [get_weather]
 model_with_tools = model.bind_tools(tools)
 
+
 def chatbot(state: State):
     return {"messages": [model_with_tools.invoke(state["messages"])]}
+
 
 graph_builder = StateGraph(State)
 
@@ -65,6 +67,7 @@ if __name__ == "__main__":
             
         result = app.invoke({"messages": [HumanMessage(content=user_input)]})
         print(f"Bot: {result['messages'][-1].content}")
+
 
 
 
