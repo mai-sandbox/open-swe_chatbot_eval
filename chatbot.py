@@ -51,19 +51,6 @@ graph_builder.add_edge("tools", "chatbot")
 
 app = graph_builder.compile()
 
-if __name__ == "__main__":
-    print("Simple Chatbot Started! Ask about weather or chat.")
-    print("Type 'quit' to exit")
-    
-    while True:
-        user_input = input("\nYou: ")
-        if user_input.lower() == 'quit':
-            break
-            
-        result = app.invoke({"messages": [HumanMessage(content=user_input)]})
-        print(f"Bot: {result['messages'][-1].content}")
-
-
 
 
 
