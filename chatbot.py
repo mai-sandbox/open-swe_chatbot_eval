@@ -26,6 +26,7 @@ def get_weather(city: str) -> str:
     """Get weather for a city."""
     return f"It's sunny and 75°F in {city}!"
 
+
 # Setup model
 model = ChatAnthropic(model="claude-3-haiku-20240307")
 
@@ -64,6 +65,7 @@ if __name__ == "__main__":
             
         result = app.invoke({"messages": [HumanMessage(content=user_input)]})
         print(f"Bot: {result['messages'][-1].content}")
+
 
 
 
