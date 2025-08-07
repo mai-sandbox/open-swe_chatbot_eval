@@ -59,12 +59,18 @@ def chat():
         error_message = str(e)
         
         # Check for common API key issues
-        if 'anthropic' in error_message.lower() or 'api' in error_message.lower():
-            error_message = "API configuration error. Please check your ANTHROPIC_API_KEY environment variable."
+        if ('anthropic' in error_message.lower() or 
+            'api' in error_message.lower() or 
+            'authentication' in error_message.lower() or
+            'unauthorized' in error_message.lower() or
+            'api_key' in error_message.lower()):
+            error_message = ("API configuration error. Please ensure your ANTHROPIC_API_KEY is set correctly. "
+                           "Copy .env.example to .env and add your API key, or set the environment variable directly.")
         
         return jsonify({
             'error': error_message,
-            'status': 'error'
+            'status': 'error',
+            'help': 'Check server logs for more details'
         }), 500
 
 @flask_app.route('/health', methods=['GET'])
@@ -110,3 +116,4 @@ if __name__ == '__main__':
         port=5000,
         debug=True
     )
+
