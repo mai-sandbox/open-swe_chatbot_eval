@@ -78,5 +78,6 @@ def internal_error(error):
 
 if __name__ == '__main__':
     logger.info("Starting Flask chatbot server...")
-    flask_app.run(host='0.0.0.0', port=5001, debug=True)
+    flask_app.run(host='0.0.0.0', port=5002, debug=True)
+
 
