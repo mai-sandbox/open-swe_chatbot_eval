@@ -75,6 +75,68 @@ def input_processor(state: State):
     # If not a HumanMessage, return unchanged
     return {"messages": messages}
 
+def response_formatter(state: State):
+    """
+    Postprocesses AI responses by adding formatting like proper capitalization,
+    adding response metadata, and ensuring consistent response structure.
+    """
+    messages = state["messages"]
+    if not messages:
+        return {"messages": []}
+    
+    # Get the last message (should be AI response)
+    last_message = messages[-1]
+    
+    # Only process AIMessage responses
+    if isinstance(last_message, AIMessage):
+        # Format the response content
+        formatted_content = last_message.content
+        
+        # Ensure proper capitalization - capitalize first letter of sentences
+        if formatted_content:
+            # Split by sentence endings and capitalize first letter of each sentence
+            sentences = re.split(r'([.!?]+\s*)', formatted_content)
+            formatted_sentences = []
+            
+            for i, sentence in enumerate(sentences):
+                if i % 2 == 0 and sentence.strip():  # Even indices are actual sentences
+                    # Capitalize first letter and ensure proper spacing
+                    sentence = sentence.strip()
+                    if sentence:
+                        sentence = sentence[0].upper() + sentence[1:] if len(sentence) > 1 else sentence.upper()
+                    formatted_sentences.append(sentence)
+                else:
+                    formatted_sentences.append(sentence)
+            
+            formatted_content = ''.join(formatted_sentences)
+            
+            # Ensure response ends with proper punctuation
+            if formatted_content and not formatted_content[-1] in '.!?':
+                formatted_content += '.'
+        
+        # Add response metadata
+        timestamp = datetime.now().isoformat()
+        response_length = len(formatted_content)
+        word_count = len(formatted_content.split()) if formatted_content else 0
+        
+        # Create enhanced message with metadata
+        enhanced_message = AIMessage(
+            content=formatted_content,
+            additional_kwargs={
+                "timestamp": timestamp,
+                "response_length": response_length,
+                "word_count": word_count,
+                "formatted": True
+            }
+        )
+        
+        # Replace the last message with the formatted one
+        formatted_messages = messages[:-1] + [enhanced_message]
+        return {"messages": formatted_messages}
+    
+    # If not an AIMessage, return unchanged
+    return {"messages": messages}
+
 def chatbot(state: State):
     return {"messages": [model_with_tools.invoke(state["messages"])]}
 
@@ -107,6 +169,7 @@ if __name__ == "__main__":
             
         result = app.invoke({"messages": [HumanMessage(content=user_input)]})
         print(f"Bot: {result['messages'][-1].content}")
+
 
 
 
