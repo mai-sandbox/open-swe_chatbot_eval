@@ -149,14 +149,21 @@ graph_builder.add_node("response_formatter", response_formatter)
 tool_node = ToolNode(tools=tools)
 graph_builder.add_node("tools", tool_node)
 
-graph_builder.add_edge(START, "chatbot")
+# Define the new flow: START -> input_processor -> chatbot -> (conditional) tools -> response_formatter -> END
+graph_builder.add_edge(START, "input_processor")
+graph_builder.add_edge("input_processor", "chatbot")
 
 graph_builder.add_conditional_edges(
     "chatbot",
     tools_condition,
+    {
+        "tools": "tools",
+        "__end__": "response_formatter"
+    }
 )
 
-graph_builder.add_edge("tools", "chatbot")
+graph_builder.add_edge("tools", "response_formatter")
+graph_builder.add_edge("response_formatter", END)
 
 app = graph_builder.compile()
 
@@ -171,6 +178,7 @@ if __name__ == "__main__":
             
         result = app.invoke({"messages": [HumanMessage(content=user_input)]})
         print(f"Bot: {result['messages'][-1].content}")
+
 
 
 
