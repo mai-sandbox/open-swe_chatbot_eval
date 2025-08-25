@@ -142,7 +142,9 @@ def chatbot(state: State):
 
 graph_builder = StateGraph(State)
 
+graph_builder.add_node("input_processor", input_processor)
 graph_builder.add_node("chatbot", chatbot)
+graph_builder.add_node("response_formatter", response_formatter)
 
 tool_node = ToolNode(tools=tools)
 graph_builder.add_node("tools", tool_node)
@@ -169,6 +171,7 @@ if __name__ == "__main__":
             
         result = app.invoke({"messages": [HumanMessage(content=user_input)]})
         print(f"Bot: {result['messages'][-1].content}")
+
 
 
 
