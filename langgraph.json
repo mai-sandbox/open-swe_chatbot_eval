@@ -1,0 +1,10 @@
+{
+  "dependencies": ["."],
+  "graphs": {
+    "agent": {
+      "path": "chatbot.py:app",
+      "description": "A basic chatbot with weather tool capabilities"
+    }
+  },
+  "env": ".env"
+}
